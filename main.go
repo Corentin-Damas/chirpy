@@ -26,9 +26,12 @@ func main() {
 
 	r.Handle("/app", fgHandler)
 	r.Handle("/app/*", fgHandler)
-	r.Get("/healthz", handlerReadiness)
-	r.Get("/metrics", apiCfg.handlerMetrics)
-	r.Get("/reset", apiCfg.handlerReset)
+
+	apiRouter := chi.NewRouter()
+	apiRouter.Get("/healthz", handlerReadiness)
+	apiRouter.Get("/metrics", apiCfg.handlerMetrics)
+	apiRouter.Get("/reset", apiCfg.handlerReset)
+	r.Mount("/api", apiRouter)
 
 	corsMux := middlewareCors(r)
 
